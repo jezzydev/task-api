@@ -1,26 +1,10 @@
 [
-    {
-        "id": 1,
-        "title": "Learn Express.js",
-        "description": "Watch Brad's Express crash courseeeeee",
-        "createdAt": "2026-02-24T08:26:03.972Z"
-    },
-    {
-        "id": 3,
-        "title": "Answer exercises",
-        "description": "Answer http exercises",
-        "status": "completed",
-        "priority": "high",
-        "createdAt": "2026-02-24T08:28:20.021Z",
-        "updatedAt": "2026-02-24T08:51:39.787Z"
-    },
-    {
-        "id": 4,
-        "title": "Learn Promises",
-        "description": "Read the docs",
-        "status": "in-progress",
-        "priority": "medium",
-        "createdAt": "2026-02-24T08:48:54.275Z",
-        "updatedAt": "2026-02-24T08:49:57.867Z"
-    }
+  {
+    "id": 1,
+    "title": "This is a new Task",
+    "description": "This is what you must do",
+    "priority": "low",
+    "status": "pending",
+    "createdAt": "2026-02-25T08:06:04.063Z"
+  }
 ]

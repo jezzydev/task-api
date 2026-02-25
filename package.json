@@ -1,13 +1,17 @@
 {
     "name": "task-api",
     "version": "1.0.0",
-    "description": "",
+    "description": "Task Manager REST API",
     "main": "server.js",
     "scripts": {
         "dev": "nodemon server",
         "start": "node server"
     },
-    "keywords": [],
+    "keywords": [
+        "express",
+        "api",
+        "tasks"
+    ],
     "author": "",
     "license": "ISC",
     "type": "commonjs",
@@ -20,6 +24,7 @@
         "prettier": "3.8.1"
     },
     "dependencies": {
-        "express": "^5.2.1"
+        "express": "^5.2.1",
+        "moment": "^2.30.1"
     }
 }
