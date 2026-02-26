@@ -1,9 +1,13 @@
-const moment = require('moment');
+const dateTimeFormatter = require('../utils/dateTime');
 
 const logger = (req, res, next) => {
-    console.log(
-        `[${moment().format('yyyy-MM-DD hh:mm:ss')}]: ${req.method} ${req.protocol}://${req.get('host')}${req.originalUrl}`,
-    );
+    const now = new Date();
+    const timestamp =
+        dateTimeFormatter.formatDate(now) +
+        ' ' +
+        dateTimeFormatter.formatTime(now);
+
+    console.log(`[${timestamp}]: ${req.method} ${req.originalUrl}`);
 
     next();
 };

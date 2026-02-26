@@ -1,4 +1,5 @@
 const { ValidationError } = require('./errors');
+const dateTime = require('../utils/dateTime');
 
 const MAX_DESC = 500;
 const STATUSES = ['pending', 'in-progress', 'completed'];
@@ -42,6 +43,49 @@ const validateData = (data) => {
         throw new ValidationError(`Invalid priority value: ${data.priority}`);
     }
 
+    if (data.dueDate) {
+        if (!dateTime.isValidFormat(data.dueDate)) {
+            throw new ValidationError(
+                `Invalid dueDate format: ${data.dueDate}. It must be in the format yyyy-mm-dd`,
+            );
+        }
+
+        if (!dateTime.isValidDate(data.dueDate)) {
+            throw new ValidationError(`Invalid dueDate: ${data.dueDate}.`);
+        }
+    }
+
+    if (data.tags) {
+        if (
+            !Array.isArray(data.tags) ||
+            data.tags.some((tag) => typeof tag !== 'string')
+        ) {
+            throw new ValidationError(
+                `Invalid tags: ${data.tags}. Tags should be an array of strings.`,
+            );
+        }
+    }
+
+    return true;
+};
+
+const validatePage = (page) => {
+    const num = Number(page);
+
+    if (!Number.isInteger(num) || num < 1) {
+        throw new ValidationError(`Invalid page number: ${page}`);
+    }
+
+    return true;
+};
+
+const validateLimit = (limit) => {
+    const num = Number(limit);
+
+    if (!Number.isInteger(num) || num < 1) {
+        throw new ValidationError(`Invalid limit number: ${limit}`);
+    }
+
     return true;
 };
 
@@ -51,11 +95,15 @@ const cleanData = (data) => {
         description: data.description?.trim() || '',
         status: data.status?.trim() || 'pending',
         priority: data.priority?.trim() || 'medium',
+        dueDate: data.dueDate?.trim() || dateTime.formatDate(new Date()),
+        tags: data.tags || [],
     };
 };
 
 module.exports = {
     validateId,
     validateData,
+    validatePage,
+    validateLimit,
     cleanData,
 };
