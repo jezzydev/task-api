@@ -82,7 +82,7 @@ const validatePage = (page) => {
 const validateLimit = (limit) => {
     const num = Number(limit);
 
-    if (!Number.isInteger(num) || num < 1) {
+    if (!Number.isInteger(num)) {
         throw new ValidationError(`Invalid limit number: ${limit}`);
     }
 
@@ -90,14 +90,19 @@ const validateLimit = (limit) => {
 };
 
 const cleanData = (data) => {
-    return {
+    const cleaned = {
         title: data.title?.trim(),
         description: data.description?.trim() || '',
         status: data.status?.trim() || 'pending',
         priority: data.priority?.trim() || 'medium',
-        dueDate: data.dueDate?.trim() || dateTime.formatDate(new Date()),
         tags: data.tags || [],
     };
+
+    if (data.dueDate) {
+        cleaned.dueDate = data.dueDate.trim();
+    }
+
+    return cleaned;
 };
 
 module.exports = {

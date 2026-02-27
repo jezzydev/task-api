@@ -1,78 +1,50 @@
 [
-    {
-        "id": 2,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "pending",
-        "priority": "low",
-        "createdAt": "2026-02-26T05:57:15.620Z",
-        "updatedAt": "2026-02-26T05:57:15.620Z"
-    },
-    {
-        "id": 3,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "pending",
-        "priority": "medium",
-        "createdAt": "2026-02-26T06:01:27.152Z",
-        "updatedAt": "2026-02-26T06:01:27.152Z"
-    },
-    {
-        "id": 4,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "in-progress",
-        "priority": "low",
-        "dueDate": "2026-02-31",
-        "createdAt": "2026-02-26T06:10:45.657Z",
-        "updatedAt": "2026-02-26T06:10:45.657Z"
-    },
-    {
-        "id": 5,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "pending",
-        "priority": "medium",
-        "createdAt": "2026-02-26T06:01:27.152Z",
-        "updatedAt": "2026-02-26T06:01:27.152Z"
-    },
-    {
-        "id": 6,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "in-progress",
-        "priority": "low",
-        "dueDate": "2026-02-31",
-        "createdAt": "2026-02-26T06:10:45.657Z",
-        "updatedAt": "2026-02-26T06:10:45.657Z"
-    },
-    {
-        "id": 7,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "in-progress",
-        "priority": "low",
-        "dueDate": "2026-02-31",
-        "createdAt": "2026-02-26T06:10:45.657Z",
-        "updatedAt": "2026-02-26T06:10:45.657Z"
-    },
-    {
-        "id": 8,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "pending",
-        "priority": "medium",
-        "createdAt": "2026-02-26T06:01:27.152Z",
-        "updatedAt": "2026-02-26T06:01:27.152Z"
-    },
-    {
-        "id": 9,
-        "title": "This is a new Task",
-        "description": "This is what you must do",
-        "status": "in-progress",
-        "priority": "low",
-        "dueDate": "2026-02-31",
-        "createdAt": "2026-02-26T06:10:45.657Z",
-        "updatedAt": "2026-02-26T06:10:45.657Z"
-    }
+  {
+    "id": 1,
+    "title": "This is a new work Task",
+    "description": "This is what you must do",
+    "status": "pending",
+    "priority": "low",
+    "tags": [
+      "work"
+    ],
+    "createdAt": "2026-02-27T02:40:46.398Z",
+    "updatedAt": "2026-02-27T02:40:46.398Z"
+  },
+  {
+    "id": 2,
+    "title": "This is a new Task",
+    "description": "This is what you must do",
+    "status": "pending",
+    "priority": "low",
+    "tags": [
+      "play"
+    ],
+    "createdAt": "2026-02-27T02:40:49.349Z",
+    "updatedAt": "2026-02-27T02:40:49.349Z"
+  },
+  {
+    "id": 3,
+    "title": "This is a homework Task",
+    "description": "This is what you must do",
+    "status": "pending",
+    "priority": "low",
+    "tags": [
+      "homework"
+    ],
+    "createdAt": "2026-02-27T02:40:46.398Z",
+    "updatedAt": "2026-02-27T02:40:46.398Z"
+  },
+  {
+    "id": 4,
+    "title": "This is a another WORK",
+    "description": "This is what you must do",
+    "status": "in-progress",
+    "priority": "medium",
+    "tags": [
+      "work"
+    ],
+    "createdAt": "2026-02-27T02:40:46.398Z",
+    "updatedAt": "2026-02-27T02:40:46.398Z"
+  }
 ]

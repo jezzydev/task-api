@@ -4,6 +4,7 @@ const path = require('path');
 const validator = require('../utils/validation');
 const errors = require('../utils/errors');
 const fileManager = require('../utils/fileManager');
+const { ReadableStreamDefaultController } = require('stream/web');
 const FILEPATH_TASKS = path.join(__dirname, '../data', 'tasks.json');
 
 //GET
@@ -28,59 +29,95 @@ router.get('/', async (req, res) => {
 
     //search (title/description)
     if (req.query.search) {
+        const searchLower = req.query.search.toLowerCase();
         tasks = tasks.filter(
             (t) =>
-                t.title.includes(req.query.search) ||
-                t.description.includes(req.query.search),
+                t.title.toLowerCase().includes(searchLower) ||
+                t.description?.toLowerCase().includes(searchLower),
         );
     }
 
     //pagination
-    if (req.query.page && validator.validatePage(req.query.page)) {
-        const maxPages = Number(req.query.page);
-        const limit =
-            req.query.limit && validator.validateLimit(req.query.limit)
-                ? Number(req.query.limit)
-                : 10;
-        let index = 0;
-        let page = 1;
-        const pagedTasks = [];
+    if (req.query.page) {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const totalTasks = tasks.length;
+        const totalPages = Math.ceil(totalTasks / limit);
+        const index = (page - 1) * limit;
 
-        while (page <= maxPages && index < tasks.length) {
-            const t = {
-                page,
-                tasks: tasks.slice(index, index + limit),
-            };
-
-            pagedTasks.push(t);
-            index += limit;
-            page++;
+        if (page > totalPages && totalTasks > 0) {
+            throw new errors.ValidationError(
+                `Page ${page} does not exist. Total pages: ${totalPages}`,
+            );
         }
 
-        tasks = pagedTasks;
+        return res.json({
+            Tasks: tasks.slice(index, index + limit),
+            Pagination: {
+                page: page,
+                limit: limit,
+                totalTasks: totalTasks,
+                totalPages: totalPages,
+            },
+        });
     }
 
     res.json(tasks);
 });
 
-//Get stats
+//Get stats - specific
 router.get('/stats', async (req, res) => {
     const tasks = await getTasks();
-    const groupByStatus = Object.groupBy(tasks, ({ status }) => status);
-    const transformedStatus = Object.keys(groupByStatus).map((key) => {
-        return [key, groupByStatus[key].length];
-    });
-    const groupByPriority = Object.groupBy(tasks, ({ priority }) => priority);
-    const transformedPriority = Object.keys(groupByPriority).map((key) => {
-        return [key, groupByPriority[key].length];
-    });
+
+    if (typeof Object.groupBy === 'function') {
+        const groupByStatus = Object.groupBy(tasks, ({ status }) => status);
+        const transformedStatus = Object.keys(groupByStatus).map((key) => {
+            return [key, groupByStatus[key].length];
+        });
+
+        const groupByPriority = Object.groupBy(
+            tasks,
+            ({ priority }) => priority,
+        );
+        const transformedPriority = Object.keys(groupByPriority).map((key) => {
+            return [key, groupByPriority[key].length];
+        });
+
+        return res.json({
+            satutsCounts: { ...Object.fromEntries(transformedStatus) },
+            priorityCounts: { ...Object.fromEntries(transformedPriority) },
+        });
+    }
+
+    //Fallback implementation
+    const grouper = (arr, groupByProperty) => {
+        return arr.reduce((acc, task) => {
+            const key = task[groupByProperty];
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(task);
+            return acc;
+        }, {});
+    };
+
+    const groupByStatus = grouper(tasks, 'status');
+    const statusCounts = Object.fromEntries(
+        Object.entries(groupByStatus).map(([key, arr]) => [key, arr.length]),
+    );
+
+    const groupByPriority = grouper(tasks, 'priority');
+    const priorityCounts = Object.fromEntries(
+        Object.entries(groupByPriority).map(([key, arr]) => [key, arr.length]),
+    );
+
     res.json({
-        ByStatus: { ...Object.fromEntries(transformedStatus) },
-        ByPriority: { ...Object.fromEntries(transformedPriority) },
+        satutsCounts: statusCounts,
+        priorityCounts: priorityCounts,
     });
 });
 
-//Get a single task by ID
+//Get a single task by ID - catch-all
 router.get('/:id', async (req, res) => {
     const id = validator.validateId(req.params.id);
     const tasks = await getTasks();
@@ -155,8 +192,14 @@ router.delete('/', async (req, res) => {
     const tasks = await getTasks();
     const filteredTasks = tasks.filter((t) => t.status !== 'completed');
 
-    await fileManager.writeToFile(FILEPATH_TASKS, filteredTasks);
-    res.json({ message: 'All completed tasks deleted' });
+    if (filteredTasks.length !== tasks.length) {
+        await fileManager.writeToFile(FILEPATH_TASKS, filteredTasks);
+        return res.json({
+            message: `Deleted ${tasks.length - filteredTasks.length} completed tasks`,
+        });
+    }
+
+    res.json({ message: 'No completed tasks to delete' });
 });
 
 async function getTasks() {
