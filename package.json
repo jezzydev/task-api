@@ -5,7 +5,10 @@
     "main": "server.js",
     "scripts": {
         "dev": "nodemon server",
-        "start": "node server"
+        "start": "node server",
+        "lint": "eslint",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write ."
     },
     "keywords": [
         "express",
